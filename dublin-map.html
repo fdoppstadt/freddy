@@ -337,7 +337,170 @@
             }
         };
         
-        // Create markers
+        // Venues data
+        const venues = {
+            'cote': {
+                name: 'Cote',
+                type: 'restaurant',
+                district: 'Baggot Street',
+                lat: 53.339,
+                lng: -6.246,
+                cuisine: 'French',
+                vibe: 'Casual, excellent steak frites',
+                note: '€€ — Reserve ahead on weekends',
+                color: '#ff6b6b'
+            },
+            'hatch': {
+                name: 'Hatch & Sons',
+                type: 'restaurant',
+                district: 'Smithfield',
+                lat: 53.349,
+                lng: -6.283,
+                cuisine: 'Sourdough, Natural Wine',
+                vibe: 'Trendy, fun crowd, great brunch',
+                note: '€€ — Go for breakfast/brunch',
+                color: '#ff6b6b'
+            },
+            'drury': {
+                name: 'Drury Buildings',
+                type: 'restaurant',
+                district: 'South Side',
+                lat: 53.339,
+                lng: -6.261,
+                cuisine: 'Seafood, Seasonal',
+                vibe: 'Local favorite, sophisticated',
+                note: '€€€ — Reserve for dinner',
+                color: '#ff6b6b'
+            },
+            'fanboi': {
+                name: 'Fanboi',
+                type: 'restaurant',
+                district: 'South Side',
+                lat: 53.340,
+                lng: -6.263,
+                cuisine: 'Asian Fusion',
+                vibe: 'Modern, vibey, younger crowd',
+                note: '€€ — Good for Saturday dinner',
+                color: '#ff6b6b'
+            },
+            'gruel': {
+                name: 'Gruel',
+                type: 'cafe',
+                district: 'Temple Bar',
+                lat: 53.344,
+                lng: -6.268,
+                cuisine: 'Brunch, Coffee',
+                vibe: 'Local-run, cozy',
+                note: '€ — Best for weekend breakfast',
+                color: '#ffa500'
+            },
+            'brazen-head': {
+                name: 'The Brazen Head',
+                type: 'pub',
+                district: 'Merchants Quay',
+                lat: 53.346,
+                lng: -6.268,
+                vibe: 'Oldest pub in Dublin, proper atmosphere',
+                note: 'Great Guinness, live music sometimes',
+                color: '#4da6ff'
+            },
+            'sine': {
+                name: 'Sin É',
+                type: 'pub',
+                district: 'Merchants Quay',
+                lat: 53.347,
+                lng: -6.268,
+                vibe: 'Tiny, locals only, brilliant craic',
+                note: 'Real Dublin experience',
+                color: '#4da6ff'
+            },
+            'smithwicks': {
+                name: 'Smithwicks',
+                type: 'pub',
+                district: 'Merchants Quay',
+                lat: 53.346,
+                lng: -6.269,
+                vibe: 'Dive bar vibes, zero tourists',
+                note: 'Authentic, fun crowd',
+                color: '#4da6ff'
+            },
+            'toners': {
+                name: 'Toners',
+                type: 'pub',
+                district: 'Baggot Street',
+                lat: 53.339,
+                lng: -6.247,
+                vibe: 'Old-school Dublin, locals',
+                note: 'No music, proper conversation',
+                color: '#4da6ff'
+            },
+            'mcdaids': {
+                name: "McDaid's",
+                type: 'pub',
+                district: 'South Side',
+                lat: 53.342,
+                lng: -6.261,
+                vibe: 'Literary vibe, historic',
+                note: 'Proper Dublin pub',
+                color: '#4da6ff'
+            },
+            'gravediggers': {
+                name: 'Gravediggers Pub',
+                type: 'pub',
+                district: 'Glasnevin',
+                lat: 53.374,
+                lng: -6.280,
+                vibe: 'In the cemetery, locals only, unique',
+                note: 'Worth the trip for the experience',
+                color: '#4da6ff'
+            },
+            'wiggle': {
+                name: 'Wiggle',
+                type: 'club',
+                district: 'South William St',
+                lat: 53.342,
+                lng: -6.259,
+                music: 'House/Techno',
+                vibe: '25-35 crowd, proper dancefloor ✨',
+                note: 'Best for your taste — start 11pm',
+                color: '#9d4edd'
+            },
+            'district8': {
+                name: 'District 8',
+                type: 'club',
+                district: 'Smithfield',
+                lat: 53.349,
+                lng: -6.283,
+                music: 'Techno, Minimal House',
+                vibe: 'Underground, serious sound system',
+                note: 'Real techno crowd',
+                color: '#9d4edd'
+            },
+            'copper-rooms': {
+                name: 'Copper Rooms',
+                type: 'club',
+                district: 'Smithfield',
+                lat: 53.349,
+                lng: -6.284,
+                music: 'Minimal House',
+                vibe: 'Underground vibe',
+                note: 'Good alternative to District 8',
+                color: '#9d4edd'
+            },
+            'opium': {
+                name: 'Opium',
+                type: 'club',
+                district: 'Wexford St',
+                lat: 53.340,
+                lng: -6.264,
+                music: 'House/Techno',
+                vibe: 'Younger crowd, good for Paddy\'s',
+                note: 'Popular venue',
+                color: '#9d4edd'
+            }
+        };
+        
+        // Create district markers
         Object.keys(districts).forEach(key => {
             const district = districts[key];
             const marker = L.circleMarker([district.lat, district.lng], {
@@ -350,6 +513,21 @@
             }).addTo(map);
             
             marker.on('click', () => showDistrict(key));
+        });
+        
+        // Create venue markers
+        Object.keys(venues).forEach(key => {
+            const venue = venues[key];
+            const marker = L.circleMarker([venue.lat, venue.lng], {
+                radius: 8,
+                fillColor: venue.color,
+                color: '#fff',
+                weight: 1.5,
+                opacity: 1,
+                fillOpacity: 0.7
+            }).addTo(map);
+            
+            marker.on('click', () => showVenue(key));
         });
         
         function showDistrict(key) {
@@ -405,6 +583,32 @@
             }
             
             html += `<div class="verdict ${district.verdictClass}"><strong>Verdict:</strong> ${district.verdict}</div>`;
+            
+            document.getElementById('info').innerHTML = html;
+        }
+        
+        function showVenue(key) {
+            const venue = venues[key];
+            let typeEmoji = '🍽️';
+            if (venue.type === 'pub') typeEmoji = '🍺';
+            if (venue.type === 'club') typeEmoji = '🎵';
+            if (venue.type === 'cafe') typeEmoji = '☕';
+            
+            let html = `
+                <h1>${typeEmoji} ${venue.name}</h1>
+                <div class="vibe">"${venue.vibe}"</div>
+                <div class="distance">📍 ${venue.district}</div>
+            `;
+            
+            if (venue.cuisine) {
+                html += `<div class="section"><h3>🍴 Cuisine</h3><p>${venue.cuisine}</p></div>`;
+            }
+            
+            if (venue.music) {
+                html += `<div class="section"><h3>🎵 Music</h3><p>${venue.music}</p></div>`;
+            }
+            
+            html += `<div class="section"><h3>📝 Note</h3><p>${venue.note}</p></div>`;
             
             document.getElementById('info').innerHTML = html;
         }
