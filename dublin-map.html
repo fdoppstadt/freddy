@@ -527,6 +527,96 @@
                 vibe: 'International rugby match, huge party',
                 note: 'St. Paddy\'s weekend game - legendary atmosphere!',
                 color: '#ffb300'
+            },
+            'roeandco': {
+                name: 'Roe & Co Distillery',
+                type: 'event',
+                district: 'South Side',
+                lat: 53.335,
+                lng: -6.255,
+                vibe: 'Whiskey distillery tours & tastings',
+                note: 'St. Paddy\'s special events - book ahead',
+                color: '#ffb300'
+            },
+            'viking-splash': {
+                name: 'Viking Splash Tours',
+                type: 'event',
+                district: 'City Center',
+                lat: 53.343,
+                lng: -6.265,
+                vibe: 'Amphibious vehicle tour, fun vibes',
+                note: 'Touristy but fun St. Paddy\'s experience',
+                color: '#ffb300'
+            },
+            'liffey-cruise': {
+                name: 'Liffey River Cruises',
+                type: 'event',
+                district: 'Quays',
+                lat: 53.346,
+                lng: -6.268,
+                vibe: 'St. Paddy\'s themed river cruise',
+                note: 'Scenic + festive',
+                color: '#ffb300'
+            },
+            'literaryPubCrawl': {
+                name: 'Literary Pub Crawl',
+                type: 'event',
+                district: 'South Side',
+                lat: 53.342,
+                lng: -6.261,
+                vibe: 'Educational + fun, guided pub tour',
+                note: 'McDaid\'s area - brilliant storytelling',
+                color: '#ffb300'
+            },
+            'vicar-street': {
+                name: 'Vicar Street',
+                type: 'venue',
+                district: 'South Side',
+                lat: 53.337,
+                lng: -6.263,
+                vibe: 'Comedy & live entertainment venue',
+                note: 'Check for St. Paddy\'s shows',
+                color: '#ffb300'
+            },
+            'workmans': {
+                name: 'Workman\'s Club',
+                type: 'venue',
+                district: 'South Side',
+                lat: 53.343,
+                lng: -6.263,
+                vibe: 'Live music & comedy venue',
+                note: 'St. Paddy\'s parties & shows',
+                color: '#ffb300'
+            },
+            'temple-bar-food': {
+                name: 'Temple Bar Food Market',
+                type: 'food-market',
+                district: 'Temple Bar',
+                lat: 53.344,
+                lng: -6.268,
+                vibe: 'Local food stalls, outdoor eating',
+                note: 'St. Paddy\'s special menus',
+                color: '#ff6b6b'
+            },
+            'dublin-castle': {
+                name: 'Dublin Castle Tours',
+                type: 'event',
+                district: 'City Center',
+                lat: 53.344,
+                lng: -6.270,
+                vibe: 'Historic castle tours, quieter vibe',
+                note: 'Good alternative to tourist crowds',
+                color: '#ffb300'
+            },
+            'craft-beer-stoney': {
+                name: 'Craft Beer Bars (Stoneybatter)',
+                type: 'bar',
+                district: 'Stoneybatter',
+                lat: 53.358,
+                lng: -6.291,
+                vibe: 'Local craft beers, St. Paddy\'s specials',
+                note: '20 min from base, authentic vibe',
+                color: '#4da6ff'
             }
         };
         
@@ -624,6 +714,9 @@
             if (venue.type === 'club') typeEmoji = '🎵';
             if (venue.type === 'cafe') typeEmoji = '☕';
             if (venue.type === 'event') typeEmoji = '🎉';
+            if (venue.type === 'venue') typeEmoji = '🎭';
+            if (venue.type === 'food-market') typeEmoji = '🍴';
+            if (venue.type === 'bar') typeEmoji = '🍺';
             
             let html = `
                 <h1>${typeEmoji} ${venue.name}</h1>
