@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dublin Interactive Guide — Clio's Map</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+            gap: 0;
+        }
+        
+        #map {
+            flex: 1;
+            z-index: 1;
+        }
+        
+        .sidebar {
+            width: 380px;
+            background: white;
+            overflow-y: auto;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            padding: 24px;
+        }
+        
+        .sidebar h1 {
+            font-size: 20px;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        
+        .sidebar .vibe {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+        
+        .section {
+            margin-bottom: 24px;
+        }
+        
+        .section h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .section ul {
+            list-style: none;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .section li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .section strong {
+            color: #333;
+            display: block;
+            margin-bottom: 2px;
+        }
+        
+        .verdict {
+            background: #f0f4ff;
+            border-left: 3px solid #0066ff;
+            padding: 12px;
+            font-size: 13px;
+            color: #333;
+            margin-top: 16px;
+            border-radius: 4px;
+        }
+        
+        .verdict.good {
+            background: #f0fff4;
+            border-left-color: #00b341;
+        }
+        
+        .verdict.skip {
+            background: #fff0f0;
+            border-left-color: #ff4444;
+        }
+        
+        .distance {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        
+        .emoji {
+            margin-right: 6px;
+        }
+        
+        .welcome {
+            text-align: center;
+            color: #888;
+            padding: 40px 0;
+        }
+        
+        .welcome h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .welcome p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Map markers */
+        .marker-icon {
+            background: white;
+            border: 2px solid #0066ff;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .marker-icon:hover {
+            box-shadow: 0 0 12px rgba(0, 102, 255, 0.4);
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            #map {
+                height: 50vh;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="map"></div>
+        <div class="sidebar">
+            <div class="welcome">
+                <h2>🗺️ Dublin Guide</h2>
+                <p>Click districts on the map to explore</p>
+            </div>
+            <div id="info"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([53.3498, -6.2603], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Dublin Districts Data
+        const districts = {
+            'merchants-quay': {
+                name: 'Merchants Quay / City Center',
+                emoji: '⭐',
+                lat: 53.346,
+                lng: -6.268,
+                vibe: 'Central hub, touristy but walkable to everything',
+                distance: 'Your base',
+                verdict: 'Convenient, busy, touristy. Good base but explore elsewhere for vibe.',
+                verdictClass: 'good',
+                eat: [
+                    'Cote (French, steak)',
+                    'Hatch & Sons (sourdough, wine)',
+                    'Fish & chips spots'
+                ],
+                drink: [
+                    'The Brazen Head (oldest pub)',
+                    'Sin É (locals, tiny)',
+                    'Smithwicks (dive bar)'
+                ],
+                do: [
+                    'Walk Liffey Quays',
+                    'Quick access to everything'
+                ]
+            },
+            'smithfield': {
+                name: 'Smithfield',
+                emoji: '✨',
+                lat: 53.349,
+                lng: -6.283,
+                vibe: 'Gentrified but still has character, young crowd, good bars/restaurants',
+                distance: '15 min from base',
+                verdict: 'Best vibe. Young crowd, authentically Dublin, proper energy.',
+                verdictClass: 'good',
+                eat: [
+                    'Hatch & Sons (sourdough, wine)',
+                    'Various restaurants around square',
+                    'Good coffee spots'
+                ],
+                drink: [
+                    'Multiple bars around the square',
+                    'Live music venues'
+                ],
+                club: [
+                    'District 8 (techno, underground) 🎵',
+                    'Copper Rooms (minimal house)'
+                ],
+                do: [
+                    'Walk around, street art',
+                    'Art galleries',
+                    'Vintage shops',
+                    'Street food stalls'
+                ]
+            },
+            'baggot-street': {
+                name: 'Baggot Street / South Side',
+                emoji: '🥃',
+                lat: 53.339,
+                lng: -6.247,
+                vibe: 'Old-school Dublin, proper pubs, no tourists, locals only',
+                distance: '10-15 min from base',
+                verdict: 'This is where real Dublin happens. Locals, proper pubs, no tourists. GO HERE.',
+                verdictClass: 'good',
+                eat: [
+                    'Drury Buildings (seafood, seasonal)',
+                    'Cote (French)',
+                    'Various casual spots'
+                ],
+                drink: [
+                    'Toners (iconic, locals)',
+                    'McDaid\'s (literary vibe)',
+                    'Proper local pubs'
+                ],
+                do: [
+                    'Walk around, feel real Dublin',
+                    'Shopping on nearby Grafton St',
+                    'Museums nearby'
+                ]
+            },
+            'stoneybatter': {
+                name: 'Stoneybatter',
+                emoji: '🎨',
+                lat: 53.358,
+                lng: -6.291,
+                vibe: 'Trendy, craft beer, coffee, young creative crowd',
+                distance: '20 min from base',
+                verdict: 'Cool if you want hipster vibes. Less your speed but worth exploring.',
+                verdictClass: 'good',
+                eat: [
+                    'Craft bakeries',
+                    'Modern restaurants',
+                    'Indie coffee shops'
+                ],
+                drink: [
+                    'Craft beer bars',
+                    'Hip pubs',
+                    'Local crowd'
+                ],
+                do: [
+                    'Walk around, boutique shops',
+                    'Art galleries',
+                    'People-watching'
+                ]
+            },
+            'grafton-street': {
+                name: 'Grafton Street',
+                emoji: '🛍️',
+                lat: 53.342,
+                lng: -6.261,
+                vibe: 'Main shopping street, busy, touristy',
+                distance: '5-10 min from base',
+                verdict: 'Walk through, grab coffee, don\'t spend time here.',
+                verdictClass: 'skip',
+                do: [
+                    'Shop (if you care)',
+                    'Walk the street',
+                    'Surrounding cafes'
+                ]
+            },
+            'glasnevin': {
+                name: 'Glasnevin',
+                emoji: '⚰️',
+                lat: 53.374,
+                lng: -6.280,
+                vibe: 'Cemetery district, historic, unique',
+                distance: '20 min',
+                verdict: 'Unique experience, very local, worth the trip once.',
+                verdictClass: 'good',
+                drink: [
+                    'Gravediggers Pub (in cemetery, locals only, brilliant)'
+                ],
+                do: [
+                    'Gravediggers Pub',
+                    'Walk Glasnevin Cemetery',
+                    'Proper Dublin character'
+                ]
+            },
+            'temple-bar': {
+                name: 'Temple Bar',
+                emoji: '❌',
+                lat: 53.344,
+                lng: -6.268,
+                vibe: 'Tourist hellhole, expensive, loud',
+                distance: 'Nearby',
+                verdict: 'Avoid. Every pub is rammed with stag parties. Not Dublin.',
+                verdictClass: 'skip',
+                do: [
+                    'SKIP THIS AREA'
+                ]
+            }
+        };
+        
+        // Create markers
+        Object.keys(districts).forEach(key => {
+            const district = districts[key];
+            const marker = L.circleMarker([district.lat, district.lng], {
+                radius: 20,
+                fillColor: key === 'merchants-quay' ? '#ff6b6b' : '#0066ff',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map);
+            
+            marker.on('click', () => showDistrict(key));
+        });
+        
+        function showDistrict(key) {
+            const district = districts[key];
+            let html = `
+                <h1>${district.emoji} ${district.name}</h1>
+                <div class="vibe">"${district.vibe}"</div>
+                <div class="distance">📍 ${district.distance}</div>
+            `;
+            
+            if (district.eat) {
+                html += `
+                    <div class="section">
+                        <h3>🍽️ Eat</h3>
+                        <ul>
+                            ${district.eat.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            if (district.drink) {
+                html += `
+                    <div class="section">
+                        <h3>🍺 Drink</h3>
+                        <ul>
+                            ${district.drink.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            if (district.club) {
+                html += `
+                    <div class="section">
+                        <h3>🎵 Club</h3>
+                        <ul>
+                            ${district.club.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            if (district.do) {
+                html += `
+                    <div class="section">
+                        <h3>✨ Do</h3>
+                        <ul>
+                            ${district.do.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            html += `<div class="verdict ${district.verdictClass}"><strong>Verdict:</strong> ${district.verdict}</div>`;
+            
+            document.getElementById('info').innerHTML = html;
+        }
+        
+        // Show Merchants Quay by default
+        showDistrict('merchants-quay');
+    </script>
+</body>
+</html>
