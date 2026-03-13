@@ -497,6 +497,36 @@
                 vibe: 'Younger crowd, good for Paddy\'s',
                 note: 'Popular venue',
                 color: '#9d4edd'
+            },
+            'jameson': {
+                name: 'Jameson Distillery',
+                type: 'event',
+                district: 'Smithfield',
+                lat: 53.350,
+                lng: -6.285,
+                vibe: 'Whiskey tasting, tours, events',
+                note: 'Event happening this weekend!',
+                color: '#ffb300'
+            },
+            'guinness': {
+                name: 'Guinness Storehouse',
+                type: 'event',
+                district: 'South Side',
+                lat: 53.336,
+                lng: -6.261,
+                vibe: 'Beer experience, gravity bar',
+                note: 'Event happening this weekend!',
+                color: '#ffb300'
+            },
+            'rugby': {
+                name: 'Scotland vs Ireland Rugby',
+                type: 'event',
+                district: 'Aviva Stadium',
+                lat: 53.328,
+                lng: -6.227,
+                vibe: 'International rugby match, huge party',
+                note: 'St. Paddy\'s weekend game - legendary atmosphere!',
+                color: '#ffb300'
             }
         };
         
@@ -593,6 +623,7 @@
             if (venue.type === 'pub') typeEmoji = '🍺';
             if (venue.type === 'club') typeEmoji = '🎵';
             if (venue.type === 'cafe') typeEmoji = '☕';
+            if (venue.type === 'event') typeEmoji = '🎉';
             
             let html = `
                 <h1>${typeEmoji} ${venue.name}</h1>
