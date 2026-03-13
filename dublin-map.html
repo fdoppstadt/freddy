@@ -617,6 +617,72 @@
                 vibe: 'Local craft beers, St. Paddy\'s specials',
                 note: '20 min from base, authentic vibe',
                 color: '#4da6ff'
+            },
+            'great-street-zone': {
+                name: 'Great Street Festival Zone',
+                type: 'festival-zone',
+                district: 'City Center',
+                lat: 53.346,
+                lng: -6.265,
+                timing: 'Today (Fri) & Tomorrow (Sat) - all day',
+                vibe: 'Music, performances, street entertainment',
+                note: 'Main festival action - live bands, DJs, street performers',
+                color: '#00ff00'
+            },
+            'parliament-street-zone': {
+                name: 'Parliament Street Zone',
+                type: 'festival-zone',
+                district: 'City Center',
+                lat: 53.344,
+                lng: -6.267,
+                timing: 'Today (Fri) & Tomorrow (Sat) - all day',
+                vibe: 'Entertainment, activities, food stalls',
+                note: 'Great for browsing, eating, watching street performers',
+                color: '#00ff00'
+            },
+            'smithfield-zone': {
+                name: 'Smithfield Festival Zone',
+                type: 'festival-zone',
+                district: 'Smithfield',
+                lat: 53.349,
+                lng: -6.283,
+                timing: 'Today (Fri) & Tomorrow (Sat) - evening focus',
+                vibe: 'Music, performances, local crowd',
+                note: 'Best zone for your vibe - near Jameson, good energy, young crowd',
+                color: '#00ff00'
+            },
+            'st-patrick-park': {
+                name: 'St. Patrick\'s Park Stage',
+                type: 'festival-zone',
+                district: 'City Center',
+                lat: 53.338,
+                lng: -6.260,
+                timing: 'Today (Fri) 12pm-10pm, Tomorrow (Sat) 12pm-10pm',
+                vibe: 'Main stage with live bands, performances',
+                note: 'Central hub for festival - where big acts perform. Get there early for good spots',
+                color: '#00ff00'
+            },
+            'barracks-square': {
+                name: 'Barracks Square',
+                type: 'festival-zone',
+                district: 'South Side',
+                lat: 53.340,
+                lng: -6.265,
+                timing: 'Today (Fri) & Tomorrow (Sat) - music all day',
+                vibe: 'Live music, performances, local talent',
+                note: 'Good alternative to main stage - less crowded, good Irish music',
+                color: '#00ff00'
+            },
+            'st-stephen-green': {
+                name: 'St. Stephen\'s Green Festival',
+                type: 'festival-zone',
+                district: 'City Center',
+                lat: 53.339,
+                lng: -6.258,
+                timing: 'Today (Fri) & Tomorrow (Sat) - daytime events',
+                vibe: 'Outdoor festival, performances, family-friendly',
+                note: 'Central location, good for midday exploring between other spots',
+                color: '#00ff00'
             }
         };
         
@@ -717,6 +783,7 @@
             if (venue.type === 'venue') typeEmoji = '🎭';
             if (venue.type === 'food-market') typeEmoji = '🍴';
             if (venue.type === 'bar') typeEmoji = '🍺';
+            if (venue.type === 'festival-zone') typeEmoji = '🎪';
             
             let html = `
                 <h1>${typeEmoji} ${venue.name}</h1>
@@ -732,7 +799,11 @@
                 html += `<div class="section"><h3>🎵 Music</h3><p>${venue.music}</p></div>`;
             }
             
-            html += `<div class="section"><h3>📝 Note</h3><p>${venue.note}</p></div>`;
+            if (venue.timing) {
+                html += `<div class="section"><h3>⏰ Timing</h3><p>${venue.timing}</p></div>`;
+            }
+            
+            html += `<div class="section"><h3>📝 Details</h3><p>${venue.note}</p></div>`;
             
             document.getElementById('info').innerHTML = html;
         }
